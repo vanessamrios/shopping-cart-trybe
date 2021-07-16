@@ -147,13 +147,27 @@ const buttonAddToCart = () => {
   });
 };
 
-// function cartItemClickListener(event) {
-  // coloque seu código aqui
-// }
+// ==========================================
+// Requisito 6
+// 1o passo: criar uma função que cria um botão que ao ser clicado remove todos os itens do carrinho
+// ==========================================
+
+const createButtonRemoveAll = () => {
+  const buttonRemoveAll = document.querySelector('.empty-cart');
+  buttonRemoveAll.addEventListener('click', () => {
+    const ol = document.querySelector(cartItems);
+    while (ol.firstChild) {
+      ol.removeChild(ol.firstChild);
+      totalPrice();
+      setItemsLocalStorage();
+    }
+  });
+};
 
 window.onload = () => { 
   getJson('computador');
   buttonAddToCart();
   getItemsLocalStorage();
   totalPrice();
+  createButtonRemoveAll();
 };
