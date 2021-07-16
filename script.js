@@ -16,6 +16,25 @@ function createCustomElement(element, className, innerText) {
 }
 
 // ==============================
+// Requisito 5 - Soma do valor total dos itens do carrinho
+// 1o passo: criar uma <p> no arquivo html
+// 2o passo: criar uma função que faça a soma
+// 3o passo: chamar a função criada dentro do requisito 3, que apaga tudo
+// 4o passo: chamar a função criada dentro do requisito 5, para que a soma esteja acessível lá.
+// ==============================
+
+// 2o passo do requisito 5
+function totalPrice() {
+  const getTotalPrice = document.querySelector('.total-price');
+  let price = 0;
+  const AllLi = document.querySelectorAll('li');
+  AllLi.forEach((item) => {
+    const computer = item.innerText.split('$');
+    price += Number(computer[1]);
+  });
+  getTotalPrice.innerHTML = `${(Math.round((price * 100)) / 100)}`; // mesma lógica que usei no zoo functions para casas decimais
+}
+
 // Requisito 1
 // 1o passo: pegar os valores do JSON e enviar pro html de forma dinâmica
 // 2o passo Requisito 1 - usar os valores do json e adicioná-los ao html em suas sections.
@@ -70,6 +89,7 @@ const setItemsLocalStorage = () => {
 function cartItemClickListener(event) {
   event.target.remove();
   setItemsLocalStorage(); // 2o passo do requisito 4
+  totalPrice(); // 4o passo do requisito 5
 }
 
 const getItemsLocalStorage = () => {
@@ -122,6 +142,7 @@ const buttonAddToCart = () => {
       const createComputer = createCartItemElement(buttonData);
       document.querySelector(cartItems).appendChild(createComputer);
       setItemsLocalStorage(); // 4o passo do requisito 4
+      totalPrice(); // 5o passo do requisito 5
     }
   });
 };
@@ -134,4 +155,5 @@ window.onload = () => {
   getJson('computador');
   buttonAddToCart();
   getItemsLocalStorage();
+  totalPrice();
 };
