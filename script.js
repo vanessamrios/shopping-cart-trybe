@@ -1,3 +1,4 @@
+const cartItems = '.cart__items';
 // cria imagens que serão renderizadas no browser
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -43,6 +44,23 @@ const getJson = async (query) => {
 };
 
 // =====================================
+// Requisito 4 
+// Carregar o carrinho de acordo com o local Storage
+// 1o passo: criar uma função pra fazer o setItem do local storage
+// 2o passo: chama a função no evento de clique cartItemClickListener
+// 3o passo: fazer o getItem nos itens do local storage
+// 4o passo: chamar a função setItemsLocalStorage() no evento de click
+// =====================================
+
+// 1o passo do requisito 4
+const setItemsLocalStorage = () => {
+  const ol = document.querySelector(cartItems); // recupera a ol
+  const text = ol.innerHTML; 
+  localStorage.setItem('cartList', '');
+  localStorage.setItem('cartList', JSON.stringify(text));
+};
+
+// =====================================
 // Requisito 3
 // 1o passo: como já existe a função createCartItemElement (que cria as lis), precisamos apenas removemos o evento criado
 // Feita com a ajuda de Lanai Conceição (e com a lógica de Luiza Antiques)
@@ -51,7 +69,19 @@ const getJson = async (query) => {
 // 1o passo do requisito 3
 function cartItemClickListener(event) {
   event.target.remove();
+  setItemsLocalStorage(); // 2o passo do requisito 4
 }
+
+const getItemsLocalStorage = () => {
+  const getLocalStorage = JSON.parse(localStorage.getItem('cartList')); // recupera o item criado no requisito 4
+  const ol = document.querySelector(cartItems);
+  ol.innerHTML = getLocalStorage;
+  ol.addEventListener('click', (event) => {
+    if (event.target.className === 'cart__item') {
+      cartItemClickListener(event);
+    }
+  });
+};
 
 // ===================================
 // Requisito 2 - COMPLEXO DEMAIS (Feita com a ajuda de Lanai Conceição)
@@ -90,7 +120,8 @@ const buttonAddToCart = () => {
       const buttonId = getSkuFromProductItem(buttonParent);
       const buttonData = await getComputers(buttonId);
       const createComputer = createCartItemElement(buttonData);
-      document.querySelector('.cart__items').appendChild(createComputer);
+      document.querySelector(cartItems).appendChild(createComputer);
+      setItemsLocalStorage(); // 4o passo do requisito 4
     }
   });
 };
@@ -102,4 +133,5 @@ const buttonAddToCart = () => {
 window.onload = () => { 
   getJson('computador');
   buttonAddToCart();
+  getItemsLocalStorage();
 };
